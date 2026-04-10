@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Carrinho | ÉLÉGANCE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        .cart-layout {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 60px;
+            margin-top: 40px;
+        }
+        .cart-table th {
+            text-align: left;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #111;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 700;
+        }
+        .cart-item td {
+            padding: 30px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .summary-box {
+            background: #fafafa;
+            padding: 40px;
+            border: 1px solid #eee;
+            height: fit-content;
+        }
+        .qty-control {
+            display: flex;
+            border: 1px solid #ddd;
+            width: fit-content;
+        }
+        .qty-control button {
+            padding: 8px 12px;
+            background: none;
+            font-size: 16px;
+        }
+        .qty-control span {
+            padding: 8px 15px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        @media (max-width: 992px) {
+            .cart-layout { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="container section-padding">
+        <div class="breadcrumb" style="font-size: 11px; color: #999; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.05em;">
+            Home / Seu Carrinho
+        </div>
+
+        <h1 style="font-size: 2.5rem; font-family: var(--font-heading); margin-bottom: 40px;">Seu Carrinho</h1>
+
+        <div id="cartContent">
+            <!-- Content loaded via JS -->
+        </div>
+    </main>
+
+    <script type="module">
+        import { renderHeader, renderFooter, updateBadges } from './js/components.js';
+        import { removeFromCart, updateQuantity } from './js/cart.js';
+
+        renderHeader();
+        renderFooter();
+        updateBadges();
+
+        const renderCart = () => {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const container = document.getElementById('cartContent');
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 120px 0;">
+                        <i class="fas fa-shopping-bag" style="font-size: 4rem; color: #eee; margin-bottom: 30px;"></i>
+                        <h2 style="font-family: var(--font-heading); font-size: 2rem; margin-bottom: 20px;">Seu carrinho está vazio.</h2>
+                        <p style="color: #666; margin-bottom: 40px;">Explore nossas coleções e encontre peças incríveis.</p>
+                        <a href="produtos.html" class="btn" style="background: #111; color: #fff; padding: 15px 40px; font-weight: 600; font-size: 12px; letter-spacing: 0.1rem;">IR PARA A LOJA</a>
+                    </div>
+                `;
+                return;
+            }
+
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const frete = subtotal > 299 ? 0 : 25;
+
+            container.innerHTML = `
+                <div class="cart-layout">
+                    <div>
+                        <table class="cart-table" style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr>
+                                    <th>Produto</th>
+                                    <th>Preço</th>
+                                    <th>Quantidade</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${cart.map(item => `
+                                    <tr class="cart-item">
+                                        <td>
+                                            <div class="flex" style="gap: 20px;">
+                                                <img src="${item.image}" style="width: 90px; height: 120px; object-fit: cover; border-radius: 0;">
+                                                <div>
+                                                    <h4 style="font-size: 15px; font-family: var(--font-heading); margin-bottom: 5px;">${item.name}</h4>
+                                                    <p style="font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 0.05rem;">${item.category}</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="font-size: 15px;">R$ ${item.price.toFixed(2)}</td>
+                                        <td>
+                                            <div class="qty-control">
+                                                <button class="update-qty" data-id="${item.id}" data-delta="-1">-</button>
+                                                <span>${item.quantity}</span>
+                                                <button class="update-qty" data-id="${item.id}" data-delta="1">+</button>
+                                            </div>
+                                        </td>
+                                        <td style="font-weight: 700; font-size: 15px;">R$ ${(item.price * item.quantity).toFixed(2)}</td>
+                                        <td>
+                                            <button class="remove-item" data-id="${item.id}" style="background: none; color: #ccc; transition: 0.3s;" onmouseover="this.style.color='#111'" onmouseout="this.style.color='#ccc'"><i class="far fa-trash-alt"></i></button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    <aside>
+                        <div class="summary-box">
+                            <h3 style="margin-bottom: 30px; font-family: var(--font-heading); font-size: 1.5rem;">Resumo do Pedido</h3>
+                            <div class="flex" style="justify-content: space-between; margin-bottom: 15px; font-size: 14px;">
+                                <span style="color: #666;">Subtotal</span>
+                                <span>R$ ${subtotal.toFixed(2)}</span>
+                            </div>
+                            <div class="flex" style="justify-content: space-between; margin-bottom: 15px; font-size: 14px;">
+                                <span style="color: #666;">Frete</span>
+                                <span>${frete === 0 ? 'Grátis' : `R$ ${frete.toFixed(2)}`}</span>
+                            </div>
+                            <div class="flex" style="justify-content: space-between; margin-top: 30px; padding-top: 30px; border-top: 1px solid #ddd; font-weight: 700; font-size: 1.3rem;">
+                                <span>Total</span>
+                                <span>R$ ${(subtotal + frete).toFixed(2)}</span>
+                            </div>
+                            <a href="checkout.html" class="btn" style="width: 100%; margin-top: 40px; background: #111; color: #fff; padding: 18px; font-weight: 700; font-size: 12px; letter-spacing: 0.1rem; text-align: center;">FINALIZAR COMPRA</a>
+                            <p style="font-size: 11px; text-align: center; margin-top: 20px; color: #999; letter-spacing: 0.05rem;">TAXAS E IMPOSTOS RELACIONADOS AO FRETE PODEM SER APLICADOS NO CHECKOUT.</p>
+                        </div>
+                    </aside>
+                </div>
+            `;
+
+            // Event Listeners
+            document.querySelectorAll('.update-qty').forEach(btn => {
+                btn.onclick = () => {
+                    updateQuantity(parseInt(btn.dataset.id), parseInt(btn.dataset.delta));
+                    renderCart();
+                };
+            });
+            document.querySelectorAll('.remove-item').forEach(btn => {
+                btn.onclick = () => {
+                    removeFromCart(parseInt(btn.dataset.id));
+                    renderCart();
+                };
+            });
+        };
+
+        renderCart();
+    </script>
+</body>
+</html>

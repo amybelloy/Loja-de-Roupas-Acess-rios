@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favoritos | ÉLÉGANCE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+    <main class="container section-padding">
+        <div class="breadcrumb" style="font-size: 11px; color: #999; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.05em;">
+            Home / Seus Favoritos
+        </div>
+
+        <h1 style="font-size: 2.5rem; font-family: var(--font-heading); margin-bottom: 40px;">Sua Lista de Desejos</h1>
+
+        <div id="favoritesContent">
+            <!-- Content loaded via JS -->
+        </div>
+    </main>
+
+    <script type="module">
+        import { renderHeader, renderFooter, createProductCard, updateBadges } from './js/components.js';
+        import { addToCart } from './js/cart.js';
+        import { toggleFavorite } from './js/favorites.js';
+
+        renderHeader();
+        renderFooter();
+        updateBadges();
+
+        const renderFavorites = () => {
+            const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+            const container = document.getElementById('favoritesContent');
+
+            if (favorites.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 120px 0;">
+                        <i class="far fa-heart" style="font-size: 4rem; color: #eee; margin-bottom: 30px;"></i>
+                        <h2 style="font-family: var(--font-heading); font-size: 2rem; margin-bottom: 20px;">Sua lista está vazia.</h2>
+                        <p style="color: #666; margin-bottom: 40px;">Salve seus produtos favoritos para encontrá-los facilmente depois.</p>
+                        <a href="produtos.html" class="btn" style="background: #111; color: #fff; padding: 15px 40px; font-weight: 600; font-size: 12px; letter-spacing: 0.1rem;">IR PARA A LOJA</a>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="grid grid-4" id="favGrid">
+                    ${favorites.map(p => createProductCard(p)).join('')}
+                </div>
+            `;
+        };
+
+        // Event Delegation
+        document.body.addEventListener('click', (e) => {
+            const card = e.target.closest('.product-card');
+            if (!card) return;
+            const id = parseInt(card.dataset.id);
+            const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+            const product = favorites.find(p => p.id === id);
+
+            if (e.target.closest('.btn-add-cart')) {
+                addToCart(product);
+            }
+            if (e.target.closest('.btn-fav')) {
+                toggleFavorite(product);
+                renderFavorites(); // Re-render local list
+                updateBadges();
+            }
+        });
+
+        renderFavorites();
+    </script>
+</body>
+</html>

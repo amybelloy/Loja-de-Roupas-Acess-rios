@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ÉLÉGANCE | Elegância que define você</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+    <main>
+        <!-- Hero Section Élégance -->
+        <section class="hero-section">
+            <div class="container relative flex" style="align-items: center; width: 100%; height: 100%;">
+                <!-- Background Image (Simulated with absolute position if local file isn't found, but using the path we assigned) -->
+                <div style="position: absolute; top:0; right:0; width: 60%; height: 100%; background: url('assets/hero-banner.png') center/cover no-repeat; z-index: 1; opacity: 1;"></div>
+                
+                <div class="hero-content" style="position: relative; z-index: 2; padding-left: 0;">
+                    <span class="hero-subtitle">NOVA COLEÇÃO 2026</span>
+                    <h1 class="hero-title">Elegância que define você</h1>
+                    <p class="hero-description">Descubra peças exclusivas que combinam estilo, conforto e sofisticação para o seu guarda-roupa moderno.</p>
+                    <div class="flex" style="gap: 15px;">
+                        <a href="produtos.html" class="btn btn-primary" style="background: var(--black); color: var(--white); border-color: var(--black);">VER COLEÇÃO</a>
+                        <a href="categorias.html" class="btn btn-outline" style="border-color: #333; color: #333;">CATEGORIAS</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Categories -->
+        <section class="section-padding container">
+            <div class="section-header" style="text-align: center; margin-bottom: 60px;">
+                <h2 style="font-size: 2.2rem; text-transform: uppercase; letter-spacing: 0.1em;">Explorar Coleções</h2>
+                <div style="width: 40px; height: 1px; background: #000; margin: 20px auto;"></div>
+            </div>
+            <div class="grid grid-3">
+                <div class="category-card relative overflow-hidden" style="height: 450px; background: url('https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1000&auto=format&fit=crop') center/cover;">
+                    <a href="produtos.html?gender=feminino" style="position: absolute; inset: 0; background: rgba(0,0,0,0.1); display: flex; align-items: flex-end; padding: 40px; color: var(--white); transition: 0.5s;">
+                        <span style="font-size: 1.2rem; letter-spacing: 0.2rem; font-weight: 500;">FEMININO</span>
+                    </a>
+                </div>
+                <div class="category-card relative overflow-hidden" style="height: 450px; background: url('https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?q=80&w=1000&auto=format&fit=crop') center/cover;">
+                    <a href="produtos.html?gender=masculino" style="position: absolute; inset: 0; background: rgba(0,0,0,0.1); display: flex; align-items: flex-end; padding: 40px; color: var(--white); transition: 0.5s;">
+                        <span style="font-size: 1.2rem; letter-spacing: 0.2rem; font-weight: 500;">MASCULINO</span>
+                    </a>
+                </div>
+                <div class="category-card relative overflow-hidden" style="height: 450px; background: url('assets/categories-banner.png') center/cover;">
+                    <a href="produtos.html?category=acessorios" style="position: absolute; inset: 0; background: rgba(0,0,0,0.1); display: flex; align-items: flex-end; padding: 40px; color: var(--white); transition: 0.5s;">
+                        <span style="font-size: 1.2rem; letter-spacing: 0.2rem; font-weight: 500;">ACESSÓRIOS</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Products -->
+        <section class="section-padding container">
+            <div class="section-header" style="text-align: center; margin-bottom: 60px;">
+                <h3 style="font-size: 2.2rem; text-transform: uppercase; letter-spacing: 0.05em;">Destaques da Temporada</h3>
+                <p style="color: #666; font-size: 0.9rem; margin-top: 10px;">Peças atemporais selecionadas para você.</p>
+            </div>
+            <div class="grid grid-4" id="featuredProducts">
+                <!-- Products will be loaded here via JS -->
+            </div>
+            <div style="text-align: center; margin-top: 80px;">
+                <a href="produtos.html" class="btn" style="border: 1px solid #000; padding: 15px 40px; font-weight: 600; font-size: 12px; letter-spacing: 0.1rem;">VER TODOS OS PRODUTOS</a>
+            </div>
+        </section>
+
+        <!-- Newsletter Section -->
+        <section class="section-padding" style="background: #fafafa; text-align: center; border-top: 1px solid #eee;">
+            <div class="container" style="max-width: 500px;">
+                <h4 class="heading" style="font-size: 2rem; margin-bottom: 15px;">Assine nossa Newsletter</h4>
+                <p style="margin-bottom: 30px; font-size: 0.9rem; color: #666; line-height: 1.6;">Receba atualizações exclusivas sobre coleções e eventos diretamente no seu e-mail.</p>
+                <form class="flex" style="gap: 5px; background: #fff; padding: 5px; border: 1px solid #ddd;">
+                    <input type="email" placeholder="Endereço de e-mail" style="padding: 12px; border: none; width: 100%; font-size: 13px; outline: none;">
+                    <button class="btn" style="background: var(--black); color: var(--white); padding: 12px 25px; font-size: 11px; font-weight: 600;">OK</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <script type="module">
+        import products from './js/data.js';
+        import { renderHeader, renderFooter, createProductCard, updateBadges } from './js/components.js';
+        import { addToCart } from './js/cart.js';
+        import { toggleFavorite } from './js/favorites.js';
+
+        // Initialize Home
+        renderHeader();
+        renderFooter();
+        updateBadges();
+
+        const featuredContainer = document.getElementById('featuredProducts');
+        const featured = products.filter(p => p.featured).slice(0, 4);
+
+        featuredContainer.innerHTML = featured.map(p => createProductCard(p)).join('');
+
+        // Event Delegation for Buttons
+        document.body.addEventListener('click', (e) => {
+            const card = e.target.closest('.product-card');
+            if (!card) return;
+            const id = parseInt(card.dataset.id);
+            const product = products.find(p => p.id === id);
+
+            if (e.target.closest('.btn-add-cart')) {
+                addToCart(product);
+            }
+            if (e.target.closest('.btn-fav')) {
+                toggleFavorite(product);
+                // Simple visual toggle for heart icon
+                const icon = e.target.closest('.btn-fav').querySelector('i');
+                const isNowSolid = icon.classList.contains('far'); 
+                icon.className = isNowSolid ? 'fas fa-heart' : 'far fa-heart';
+                icon.style.color = isNowSolid ? '#e74c3c' : 'inherit';
+            }
+        });
+    </script>
+</body>
+</html>

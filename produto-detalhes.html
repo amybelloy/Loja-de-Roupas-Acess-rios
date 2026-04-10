@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Produto | ROUPAS & CO.</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        .product-details {
+            display: grid;
+            grid-template-columns: 1fr 450px;
+            gap: var(--space-lg);
+            margin-top: 40px;
+        }
+        .product-gallery img {
+            width: 100%;
+            height: 600px;
+            object-fit: cover;
+            border-radius: var(--radius-sm);
+        }
+        .size-selector button {
+            padding: 10px 20px;
+            border: 1px solid var(--grey-300);
+            background: white;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+        .size-selector button.active {
+            border-color: var(--black);
+            background: var(--black);
+            color: var(--white);
+        }
+        .color-selector .color-pill {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-block;
+            border: 1px solid var(--grey-300);
+            cursor: pointer;
+        }
+        @media (max-width: 992px) {
+            .product-details { grid-template-columns: 1fr; }
+            .product-gallery img { height: 400px; }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="container section-padding">
+        <div id="productContent">
+            <!-- Content loaded via JS -->
+        </div>
+
+        <!-- Related Products -->
+        <section class="section-padding" style="border-top: 1px solid var(--grey-100); margin-top: 60px;">
+            <h3 class="heading" style="margin-bottom: 30px;">Talvez você também goste</h3>
+            <div class="grid grid-4" id="relatedGrid"></div>
+        </section>
+    </main>
+
+    <script type="module">
+        import products from './js/data.js';
+        import { renderHeader, renderFooter, createProductCard, updateBadges } from './js/components.js';
+        import { addToCart } from './js/cart.js';
+        import { toggleFavorite, isFavorited } from './js/favorites.js';
+
+        renderHeader();
+        renderFooter();
+        updateBadges();
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = parseInt(urlParams.get('id'));
+        const product = products.find(p => p.id === productId);
+
+        if (!product) {
+            document.getElementById('productContent').innerHTML = `
+                <div style="text-align: center; padding: 100px;">
+                    <h1>Ops! Produto não encontrado.</h1>
+                    <a href="produtos.html" class="btn btn-primary" style="margin-top: 20px;">Voltar ao Catálogo</a>
+                </div>
+            `;
+        } else {
+            document.title = `${product.name} | ROUPAS & CO.`;
+            
+            document.getElementById('productContent').innerHTML = `
+                <div class="breadcrumb" style="font-size: 12px; color: var(--grey-700);">
+                    Home / ${product.category} / ${product.name}
+                </div>
+                <div class="product-details">
+                    <div class="product-gallery">
+                        <img src="${product.image}" alt="${product.name}">
+                    </div>
+                    <div class="product-info-sticky">
+                        <div class="flex" style="justify-content: space-between; align-items: flex-start;">
+                            <span style="font-size: 12px; text-transform: uppercase; color: var(--accent-color); font-weight: 600;">${product.category}</span>
+                            <button id="mainFavBtn" style="background: none; font-size: 1.5rem;">
+                                <i class="${isFavorited(product.id) ? 'fas' : 'far'} fa-heart"></i>
+                            </button>
+                        </div>
+                        <h1 style="font-size: 2.5rem; margin: 10px 0;">${product.name}</h1>
+                        <div class="flex" style="gap: 15px; margin-bottom: 20px;">
+                            <span style="font-size: 1.5rem; font-weight: 600;">R$ ${product.price.toFixed(2)}</span>
+                            ${product.oldPrice ? `<span style="text-decoration: line-through; color: var(--grey-700);">R$ ${product.oldPrice.toFixed(2)}</span>` : ''}
+                        </div>
+                        <p style="color: var(--grey-700); margin-bottom: 30px;">${product.description}</p>
+                        
+                        <div class="filter-group" style="margin-bottom: 25px;">
+                            <h4 style="font-size: 13px; text-transform: uppercase; margin-bottom: 10px;">Tamanho</h4>
+                            <div class="size-selector flex" style="gap: 10px;">
+                                ${product.sizes.map(s => `<button>${s}</button>`).join('')}
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 40px;">
+                             <h4 style="font-size: 13px; text-transform: uppercase; margin-bottom: 10px;">Quantidade</h4>
+                             <div class="flex" style="gap: 15px;">
+                                <div class="flex" style="border: 1px solid var(--grey-300); padding: 5px;">
+                                    <button id="decQty" style="padding: 5px 15px; background: none;">-</button>
+                                    <span id="qtyVal" style="padding: 0 15px;">1</span>
+                                    <button id="incQty" style="padding: 5px 15px; background: none;">+</button>
+                                </div>
+                             </div>
+                        </div>
+
+                        <button id="mainAddCart" class="btn btn-primary" style="width: 100%; margin-bottom: 15px; padding: 20px;">ADICIONAR AO CARRINHO</button>
+                        <button class="btn btn-outline" style="width: 100%;">COMPRAR AGORA</button>
+                        
+                        <div style="margin-top: 40px; border-top: 1px solid var(--grey-100); padding-top: 20px;">
+                            <div class="flex" style="gap: 10px; font-size: 14px; margin-bottom: 10px;">
+                                <i class="fas fa-truck"></i>
+                                <span>Envio para todo o Brasil</span>
+                            </div>
+                            <div class="flex" style="gap: 10px; font-size: 14px;">
+                                <i class="fas fa-undo"></i>
+                                <span>Primeira troca grátis em até 30 dias</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Logic for Detail Page
+            let qty = 1;
+            document.getElementById('incQty').onclick = () => { qty++; updateQtyDisplay(); };
+            document.getElementById('decQty').onclick = () => { if(qty > 1) qty--; updateQtyDisplay(); };
+            const updateQtyDisplay = () => document.getElementById('qtyVal').innerText = qty;
+
+            document.getElementById('mainAddCart').onclick = () => addToCart(product, qty);
+            document.getElementById('mainFavBtn').onclick = () => {
+                toggleFavorite(product);
+                const icon = document.querySelector('#mainFavBtn i');
+                icon.classList.toggle('fas');
+                icon.classList.toggle('far');
+            };
+
+            // Related Products
+            const related = products.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4);
+            document.getElementById('relatedGrid').innerHTML = related.map(p => createProductCard(p)).join('');
+        }
+    </script>
+</body>
+</html>

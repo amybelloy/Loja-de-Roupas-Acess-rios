@@ -1,0 +1,127 @@
+/**
+ * Fake Inventory Data for the Clothing Store
+ */
+const products = [
+    {
+        id: 1,
+        name: "Blazer Soft Linen Beige",
+        category: "jaquetas",
+        gender: "feminino",
+        price: 349.90,
+        oldPrice: 420.00,
+        description: "Blazer elegante em linho macio, perfeito para ocasiões formais ou casuais sofisticadas.",
+        sizes: ["P", "M", "G"],
+        colors: ["Bege", "Off-White"],
+        image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=1000&auto=format&fit=crop",
+        rating: 4.8,
+        featured: true,
+        promo: true
+    },
+    {
+        id: 2,
+        name: "Tênis Urban Walker White",
+        category: "calçados",
+        gender: "masculino",
+        price: 289.00,
+        oldPrice: null,
+        description: "Tênis minimalista em couro sintético premium, com solado ultra confortável.",
+        sizes: [38, 39, 40, 41, 42],
+        colors: ["Branco", "Gelo"],
+        image: "https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=1000&auto=format&fit=crop",
+        rating: 4.5,
+        featured: true,
+        promo: false
+    },
+    {
+        id: 3,
+        name: "Vestido Midi Silk Black",
+        category: "vestidos",
+        gender: "feminino",
+        price: 520.00,
+        oldPrice: 590.00,
+        description: "Vestido luxuoso em seda, com caimento perfeito e toque aveludado.",
+        sizes: ["PP", "P", "M"],
+        colors: ["Preto"],
+        image: "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?q=80&w=1000&auto=format&fit=crop",
+        rating: 5.0,
+        featured: true,
+        promo: true
+    },
+    {
+        id: 4,
+        name: "Relógio Chrono Gold",
+        category: "acessórios",
+        gender: "unissex",
+        price: 890.00,
+        oldPrice: null,
+        description: "Relógio analógico banhado a ouro 18k, resistente à água e design atemporal.",
+        sizes: ["Único"],
+        colors: ["Dourado"],
+        image: "https://images.unsplash.com/photo-1524592091214-8f97ad3feec6?q=80&w=1000&auto=format&fit=crop",
+        rating: 4.9,
+        featured: true,
+        promo: false
+    },
+    {
+        id: 5,
+        name: "Calça Chino Classic Navy",
+        category: "calças",
+        gender: "masculino",
+        price: 199.90,
+        oldPrice: 249.00,
+        description: "Calça chino em algodão egípcio, corte slim fit ideal para o dia a dia.",
+        sizes: [38, 40, 42, 44, 46],
+        colors: ["Marinho", "Preto", "Cinza"],
+        image: "https://images.unsplash.com/photo-1624371414361-e6e8ea01c1e6?q=80&w=1000&auto=format&fit=crop",
+        rating: 4.7,
+        featured: false,
+        promo: true
+    },
+    {
+        id: 6,
+        name: "Bolsa Tote Leather Nude",
+        category: "acessórios",
+        gender: "feminino",
+        price: 450.00,
+        oldPrice: null,
+        description: "Bolsa espaçosa em couro legítimo, acabamento feito à mão.",
+        sizes: ["Único"],
+        colors: ["Nude", "Bege"],
+        image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=1000&auto=format&fit=crop",
+        rating: 4.6,
+        featured: false,
+        promo: false
+    },
+    {
+        id: 7,
+        name: "Camiseta Basic Organic White",
+        category: "camisetas",
+        gender: "masculino",
+        price: 89.90,
+        oldPrice: null,
+        description: "Camiseta essencial em algodão orgânico sustentável.",
+        sizes: ["P", "M", "G", "GG"],
+        colors: ["Branco", "Preto", "Cinza"],
+        image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1000&auto=format&fit=crop",
+        rating: 4.8,
+        featured: true,
+        promo: false
+    },
+    {
+        id: 8,
+        name: "Óculos Sun Classic Gold",
+        category: "acessórios",
+        gender: "unissex",
+        price: 159.00,
+        oldPrice: 220.00,
+        description: "Óculos de sol polarizados com armação dourada levíssima.",
+        sizes: ["Único"],
+        colors: ["Dourado"],
+        image: "https://images.unsplash.com/photo-1511499767390-a73ca473ad5f?q=80&w=1000&auto=format&fit=crop",
+        rating: 4.4,
+        featured: false,
+        promo: true
+    }
+];
+
+export default products;

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categorias | ÉLÉGANCE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+        .cat-card {
+            height: 500px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            text-align: center;
+        }
+        .cat-card img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 1s cubic-bezier(0.19, 1, 0.22, 1);
+            z-index: 1;
+        }
+        .cat-card:hover img { transform: scale(1.05); }
+        .cat-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.25);
+            z-index: 2;
+            transition: 0.5s;
+        }
+        .cat-card:hover .cat-overlay { background: rgba(0,0,0,0.4); }
+        .cat-content {
+            position: relative;
+            z-index: 3;
+            padding: 40px;
+        }
+        @media (max-width: 768px) {
+            .category-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="container section-padding">
+        <div class="breadcrumb" style="font-size: 11px; color: #999; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.05em;">
+            Home / Categorias
+        </div>
+
+        <h1 style="font-size: 2.5rem; font-family: var(--font-heading); margin-bottom: 50px;">Nossas Coleções</h1>
+
+        <div class="category-grid">
+            <a href="produtos.html?category=camisetas" class="cat-card">
+                <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800&auto=format&fit=crop" alt="Camisetas">
+                <div class="cat-overlay"></div>
+                <div class="cat-content">
+                    <h3 style="font-size: 2rem; letter-spacing: 0.15em; text-transform: uppercase;">Camisetas</h3>
+                    <p style="font-size: 12px; margin-top: 10px; letter-spacing: 0.05em; opacity: 0.8;">Básicas e Essenciais</p>
+                </div>
+            </a>
+            <a href="produtos.html?category=vestidos" class="cat-card">
+                <img src="https://images.unsplash.com/photo-1539008835657-9e8e968000a7?q=80&w=800&auto=format&fit=crop" alt="Vestidos">
+                <div class="cat-overlay"></div>
+                <div class="cat-content">
+                    <h3 style="font-size: 2rem; letter-spacing: 0.15em; text-transform: uppercase;">Vestidos</h3>
+                    <p style="font-size: 12px; margin-top: 10px; letter-spacing: 0.05em; opacity: 0.8;">Leveza e Feminilidade</p>
+                </div>
+            </a>
+            <a href="produtos.html?category=calças" class="cat-card">
+                <img src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=800&auto=format&fit=crop" alt="Calças">
+                <div class="cat-overlay"></div>
+                <div class="cat-content">
+                    <h3 style="font-size: 2rem; letter-spacing: 0.15em; text-transform: uppercase;">Calças</h3>
+                    <p style="font-size: 12px; margin-top: 10px; letter-spacing: 0.05em; opacity: 0.8;">Cortes Impecáveis</p>
+                </div>
+            </a>
+            <a href="produtos.html?category=acessorios" class="cat-card">
+                <img src="https://images.unsplash.com/photo-1509114397022-ed747cca3f65?q=80&w=800&auto=format&fit=crop" alt="Acessórios">
+                <div class="cat-overlay"></div>
+                <div class="cat-content">
+                    <h3 style="font-size: 2rem; letter-spacing: 0.15em; text-transform: uppercase;">Acessórios</h3>
+                    <p style="font-size: 12px; margin-top: 10px; letter-spacing: 0.05em; opacity: 0.8;">O Toque Final</p>
+                </div>
+            </a>
+        </div>
+    </main>
+
+    <script type="module">
+        import { renderHeader, renderFooter, updateBadges } from './js/components.js';
+        renderHeader();
+        renderFooter();
+        updateBadges();
+    </script>
+</body>
+</html>

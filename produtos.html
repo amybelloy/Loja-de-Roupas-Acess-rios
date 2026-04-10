@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todos os Produtos | ÉLÉGANCE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        .catalog-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 50px;
+            margin-top: 40px;
+        }
+        .filter-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 20px;
+            display: block;
+        }
+        .filter-group {
+            margin-bottom: 40px;
+        }
+        .pill-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .pill-btn {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            background: #fff;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .pill-btn:hover, .pill-btn.active {
+            border-color: #000;
+            background: #000;
+            color: #fff;
+        }
+        .range-filter input { width: 100%; margin: 10px 0; }
+        @media (max-width: 992px) {
+            .catalog-layout { grid-template-columns: 1fr; }
+            .filter-sidebar { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="container section-padding">
+        <div class="breadcrumb" style="font-size: 11px; color: #999; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.05em;">
+            Home / Todos os Produtos
+        </div>
+
+        <div class="catalog-header flex" style="justify-content: space-between; align-items: baseline; margin-bottom: 30px;">
+            <div>
+                <h1 style="font-size: 2.2rem; font-family: var(--font-heading);">Todos os Produtos</h1>
+                <p id="productCount" style="font-size: 12px; color: #666; margin-top: 8px;">Buscando produtos...</p>
+            </div>
+            <div class="sort-options flex" style="gap: 15px;">
+                <span style="font-size: 11px; font-weight: 600; text-transform: uppercase;">Ordenar por</span>
+                <select id="sortSelect" style="border: none; border-bottom: 1px solid #000; font-size: 12px; font-weight: 500; outline: none; padding: 5px 0;">
+                    <option value="popular">Mais Populares</option>
+                    <option value="price-asc">Menor Preço</option>
+                    <option value="price-desc">Maior Preço</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="catalog-layout">
+            <!-- Sidebar with Pill Filters -->
+            <aside class="filter-sidebar">
+                <div class="filter-group">
+                    <span class="filter-title">Categorias</span>
+                    <div class="pill-grid" id="categoryFilters">
+                        <button class="pill-btn active" data-cat="all">Todos</button>
+                        <button class="pill-btn" data-cat="camisetas">Camisetas</button>
+                        <button class="pill-btn" data-cat="vestidos">Vestidos</button>
+                        <button class="pill-btn" data-cat="calças">Calças</button>
+                        <button class="pill-btn" data-cat="jaquetas">Jaquetas</button>
+                        <button class="pill-btn" data-cat="blusas">Blusas</button>
+                        <button class="pill-btn" data-cat="saias">Saias</button>
+                        <button class="pill-btn" data-cat="tênis">Tênis</button>
+                        <button class="pill-btn" data-cat="calçados">Calçados</button>
+                        <button class="pill-btn" data-cat="bolsas">Bolsas</button>
+                        <button class="pill-btn" data-cat="relógios">Relógios</button>
+                        <button class="pill-btn" data-cat="bonés">Bonés</button>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <span class="filter-title">Gênero</span>
+                    <div class="pill-grid" id="genderFilters">
+                        <button class="pill-btn active" data-gen="all">Unissex</button>
+                        <button class="pill-btn" data-gen="feminino">Feminino</button>
+                        <button class="pill-btn" data-gen="masculino">Masculino</button>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <span class="filter-title">Preço</span>
+                    <div class="flex" style="gap: 10px; align-items: center;">
+                        <input type="number" id="minPrice" placeholder="0" style="width: 70px; padding: 10px; border: 1px solid #eee; font-size: 12px;">
+                        <span>-</span>
+                        <input type="number" id="maxPrice" placeholder="1000" style="width: 70px; padding: 10px; border: 1px solid #eee; font-size: 12px;">
+                    </div>
+                </div>
+
+                <label style="font-size: 11px; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                    <input type="checkbox" id="promoOnly"> Apenas Promoções
+                </label>
+
+                <button id="clearFilters" style="background: none; border: none; font-size: 10px; text-decoration: underline; color: #999; margin-top: 30px; cursor: pointer;">Limpar Filtros</button>
+            </aside>
+
+            <!-- Main Grid -->
+            <div>
+                <div class="grid grid-3" id="catalogGrid">
+                    <!-- Products will be loaded here -->
+                </div>
+                <div id="noResults" style="display: none; text-align: center; padding: 100px;">
+                    <i class="fas fa-search-minus" style="font-size: 3rem; color: #eee; margin-bottom: 20px;"></i>
+                    <p style="font-size: 14px; color: #666;">Nenhum produto encontrado para esses filtros.</p>
+                </div>
+                <div style="text-align: center; margin-top: 60px;">
+                    <button class="btn" style="background: #111; color: #fff; padding: 15px 40px; font-size: 11px; font-weight: 600; letter-spacing: 0.1em;">CARREGAR MAIS</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import products from './js/data.js';
+        import { renderHeader, renderFooter, createProductCard, updateBadges } from './js/components.js';
+        import { addToCart } from './js/cart.js';
+        import { toggleFavorite } from './js/favorites.js';
+
+        renderHeader();
+        renderFooter();
+        updateBadges();
+
+        const grid = document.getElementById('catalogGrid');
+        const countTxt = document.getElementById('productCount');
+        const noResults = document.getElementById('noResults');
+
+        let currentFilters = {
+            category: 'all',
+            gender: 'all',
+            promo: false,
+            min: 0,
+            max: 1000,
+            sort: 'popular'
+        };
+
+        const render = () => {
+            let filtered = products.filter(p => {
+                const catMatch = currentFilters.category === 'all' || p.category === currentFilters.category;
+                const genMatch = currentFilters.gender === 'all' || p.gender === currentFilters.gender;
+                const priceMatch = p.price >= currentFilters.min && p.price <= currentFilters.max;
+                const promoMatch = !currentFilters.promo || p.promo;
+                return catMatch && genMatch && priceMatch && promoMatch;
+            });
+
+            if (currentFilters.sort === 'price-asc') filtered.sort((a,b) => a.price - b.price);
+            if (currentFilters.sort === 'price-desc') filtered.sort((a,b) => b.price - a.price);
+
+            countTxt.innerText = `${filtered.length} produto(s) encontrado(s)`;
+            
+            if (filtered.length === 0) {
+                grid.style.display = 'none';
+                noResults.style.display = 'block';
+            } else {
+                grid.style.display = 'grid';
+                noResults.style.display = 'none';
+                grid.innerHTML = filtered.map(p => createProductCard(p)).join('');
+            }
+        };
+
+        // Filter Handlers
+        document.querySelectorAll('#categoryFilters .pill-btn').forEach(btn => {
+            btn.onclick = () => {
+                document.querySelectorAll('#categoryFilters .pill-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilters.category = btn.dataset.cat;
+                render();
+            };
+        });
+
+        document.querySelectorAll('#genderFilters .pill-btn').forEach(btn => {
+            btn.onclick = () => {
+                document.querySelectorAll('#genderFilters .pill-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilters.gender = btn.dataset.gen;
+                render();
+            };
+        });
+
+        document.getElementById('promoOnly').onchange = (e) => {
+            currentFilters.promo = e.target.checked;
+            render();
+        };
+
+        document.getElementById('minPrice').oninput = (e) => {
+            currentFilters.min = Number(e.target.value) || 0;
+            render();
+        };
+
+        document.getElementById('maxPrice').oninput = (e) => {
+            currentFilters.max = Number(e.target.value) || 1000;
+            render();
+        };
+
+        document.getElementById('sortSelect').onchange = (e) => {
+            currentFilters.sort = e.target.value;
+            render();
+        };
+
+        document.getElementById('clearFilters').onclick = () => {
+            location.reload();
+        };
+
+        // Event Delegation
+        document.body.addEventListener('click', (e) => {
+            const card = e.target.closest('.product-card');
+            if (!card) return;
+            const id = parseInt(card.dataset.id);
+            const product = products.find(p => p.id === id);
+
+            if (e.target.closest('.btn-add-cart')) {
+                addToCart(product);
+            }
+            if (e.target.closest('.btn-fav')) {
+                toggleFavorite(product);
+                const icon = e.target.closest('.btn-fav').querySelector('i');
+                icon.className = icon.classList.contains('far') ? 'fas fa-heart' : 'far fa-heart';
+            }
+        });
+
+        render();
+    </script>
+</body>
+</html>
